@@ -479,12 +479,15 @@ else:
 
         def run(self):
             while self.pool.running:
-                func, args, kargs = self.tasks.get()
                 try:
-                    func(*args, **kargs)
-                except Exception as e:
-                    print(e)
-                self.tasks.task_done()
+                    func, args, kargs = self.tasks.get(False, 0.1)
+                    try:
+                        func(*args, **kargs)
+                    except Exception as e:
+                        print(e)
+                    self.tasks.task_done()
+                except queue.Empty:
+                    pass
 
     class _ThreadPool(object):
         '''Pool of threads consuming tasks from a queue

@@ -643,6 +643,7 @@ class WindowSDL(WindowBase):
                     raise
                 else:
                     pass
+        self.close()
 
     #
     # Pygame wrapper

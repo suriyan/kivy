@@ -1363,7 +1363,6 @@ class WindowBase(EventDispatcher):
             if key == 27 or all([is_osx, key in [113, 119], modifier == 1024]):
                 if not self.dispatch('on_request_close', source='keyboard'):
                     stopTouchApp()
-                    self.close()
                     return True
 
     if Config:

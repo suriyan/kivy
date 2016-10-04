@@ -15,7 +15,7 @@ An :class:`ActionBar` contains an :class:`ActionView` with various
 :class:`ContextualActionViews <kivy.uix.actionbar.ContextualActionView>`.
 An :class:`ActionView` will contain an :class:`ActionPrevious` having title,
 app_icon and previous_icon properties. An :class:`ActionView` will contain
-subclasses of :class:`ActionItems <ActionItem>`. Some predefined ones inlcude
+subclasses of :class:`ActionItems <ActionItem>`. Some predefined ones include
 an :class:`ActionButton`, an :class:`ActionToggleButton`, an
 :class:`ActionCheck`, an :class:`ActionSeparator` and an :class:`ActionGroup`.
 
@@ -536,7 +536,7 @@ class ActionView(BoxLayout):
         super_add(self.action_previous)
 
         width = (self.width - self.overflow_group.pack_width -
-                 self.action_previous.pack_width)
+                 self.action_previous.minimum_width)
 
         if len(self._list_action_items):
             for child in self._list_action_items[1:]:

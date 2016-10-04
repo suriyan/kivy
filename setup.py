@@ -32,7 +32,7 @@ if PY3:  # fix error with py3's LooseVersion comparisons
     LooseVersion.__eq__ = ver_equal
 
 
-MIN_CYTHON_STRING = '0.20'
+MIN_CYTHON_STRING = '0.23'
 MIN_CYTHON_VERSION = LooseVersion(MIN_CYTHON_STRING)
 MAX_CYTHON_STRING = '0.23'
 MAX_CYTHON_VERSION = LooseVersion(MAX_CYTHON_STRING)
@@ -45,7 +45,7 @@ def getoutput(cmd, env=None):
                          stderr=subprocess.PIPE, env=env)
     p.wait()
     if p.returncode:  # if not returncode == 0
-        print('WARNING: A problem occured while running {0} (code {1})\n'
+        print('WARNING: A problem occurred while running {0} (code {1})\n'
               .format(cmd, p.returncode))
         stderr_content = p.stderr.read()
         if stderr_content:

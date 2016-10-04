@@ -1,4 +1,4 @@
-''' Create rst documentaiton of the examples directory.
+''' Create rst documentation of the examples directory.
 
 This uses screenshots in the screenshots_dir
 (currently doc/sources/images/examples) along with source code and files
@@ -119,7 +119,7 @@ def enhance_info_description(info, line_length=50):
 
     info['enhanced_description'] is the description, as an array of
     paragraphs where each paragraph is an array of lines wrapped to width
-    line_length.  This enchanced description include the rst links to
+    line_length.  This enhanced description include the rst links to
     the files of info['files'].
     '''
 

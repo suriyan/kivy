@@ -1092,6 +1092,8 @@ class TextInput(FocusBehavior, Widget):
         .. versionchanged:: 1.9.1
 
         '''
+        if not self._lines:
+            return
         pgmove_speed = int(self.height /
             (self.line_height + self.line_spacing) - 1)
         col, row = self.cursor
@@ -1185,6 +1187,7 @@ class TextInput(FocusBehavior, Widget):
         self._selection = False
         self._selection_finished = True
         self._selection_touch = None
+        self.selection_text = u''
         self._trigger_update_graphics()
 
     def delete_selection(self, from_undo=False):
@@ -1216,7 +1219,7 @@ class TextInput(FocusBehavior, Widget):
                                              lineflags, len_lines)
         self.scroll_x = scrl_x
         self.scroll_y = scrl_y
-        # handle undo and redo for delete selecttion
+        # handle undo and redo for delete selection
         self._set_unredo_delsel(a, b, v[a:b], from_undo)
         self.cancel_selection()
 
@@ -2504,10 +2507,10 @@ class TextInput(FocusBehavior, Widget):
     '''If True provides auto suggestions on top of keyboard.
     This will only work if :attr:`input_type` is set to `text`.
 
-     .. versionadded:: 1.8.0
+    .. versionadded:: 1.8.0
 
-     :attr:`keyboard_suggestions` is a
-     :class:`~kivy.properties.BooleanProperty` defaults to True.
+    :attr:`keyboard_suggestions` is a :class:`~kivy.properties.BooleanProperty`
+    defaults to True.
     '''
 
     cursor_blink = BooleanProperty(False)
@@ -2543,7 +2546,7 @@ class TextInput(FocusBehavior, Widget):
         sx = self.scroll_x
         offset = self.cursor_offset()
 
-        # if offset is outside the current bounds, reajust
+        # if offset is outside the current bounds, readjust
         if offset > viewport_width + sx:
             self.scroll_x = offset - viewport_width
         if offset < sx:
@@ -3050,7 +3053,7 @@ class TextInput(FocusBehavior, Widget):
     defaults to `None`. Can be one of `None`, `'int'` (string), or `'float'`
     (string), or a callable. If it is `'int'`, it will only accept numbers.
     If it is `'float'` it will also accept a single period. Finally, if it is
-    a callable it will be called with two parameter; the string to be added
+    a callable it will be called with two parameters; the string to be added
     and a bool indicating whether the string is a result of undo (True). The
     callable should return a new substring that will be used instead.
     '''

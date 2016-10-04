@@ -100,19 +100,25 @@ class Animation(EventDispatcher):
             Transition function for animate properties. It can be the name of a
             method from :class:`AnimationTransition`.
         `step` or `s`: float
-            Step in milliseconds of the animation. Defaults to 1 / 60.
+            Step in milliseconds of the animation. Defaults to 0, which means
+            the animation is updated for every frame.
+            
+            To update the animation less often, set the step value to a float.
+            For example, if you want to animate at 30 FPS, use s=1/30. 
 
     :Events:
-        `on_start`: widget
+        `on_start`: animation, widget
             Fired when the animation is started on a widget.
-        `on_complete`: widget
+        `on_complete`: animation, widget
             Fired when the animation is completed or stopped on a widget.
-        `on_progress`: widget, progression
+        `on_progress`: animation, widget, progression
             Fired when the progression of the animation is changing.
 
     .. versionchanged:: 1.4.0
         Added s/step parameter.
 
+    .. versionchanged:: 1.9.2
+        The default value of the step parameter was changed from 1/60. to 0.
     '''
 
     _update_ev = None
@@ -127,7 +133,7 @@ class Animation(EventDispatcher):
         self._clock_installed = False
         self._duration = kw.pop('d', kw.pop('duration', 1.))
         self._transition = kw.pop('t', kw.pop('transition', 'linear'))
-        self._step = kw.pop('s', kw.pop('step', 1. / 60.))
+        self._step = kw.pop('s', kw.pop('step', 0))
         if isinstance(self._transition, string_types):
             self._transition = getattr(AnimationTransition, self._transition)
         self._animated_properties = kw
@@ -522,7 +528,7 @@ class Parallel(Animation):
 class AnimationTransition(object):
     '''Collection of animation functions to be used with the Animation object.
     Easing Functions ported to Kivy from the Clutter Project
-    http://www.clutter-project.org/docs/clutter/stable/ClutterAlpha.html
+    https://developer.gnome.org/clutter/stable/ClutterAlpha.html
 
     The `progress` parameter in each animation function is in the range 0-1.
     '''

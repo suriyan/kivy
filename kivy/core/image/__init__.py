@@ -315,7 +315,7 @@ class ImageLoader(object):
 
         Returns an Image with a list of type ImageData stored in Image._data
         '''
-        # read zip in menory for faster access
+        # read zip in memory for faster access
         _file = BytesIO(open(filename, 'rb').read())
         # read all images inside the zip
         z = zipfile.ZipFile(_file)
@@ -451,17 +451,17 @@ class Image(EventDispatcher):
         added.
 
     :Parameters:
-        `arg` : can be a string (str), Texture, BytesIO or Image object
+        `arg`: can be a string (str), Texture, BytesIO or Image object
             A string path to the image file or data URI to be loaded; or a
             Texture object, which will be wrapped in an Image object; or a
             BytesIO object containing raw image data; or an already existing
             image object, in which case, a real copy of the given image object
             will be returned.
-        `keep_data` : bool, defaults to False
+        `keep_data`: bool, defaults to False
             Keep the image data when the texture is created.
-        `scale` : float, defaults to 1.0
+        `scale`: float, defaults to 1.0
             Scale of the image.
-        `mipmap` : bool, defaults to False
+        `mipmap`: bool, defaults to False
             Create mipmap for the texture.
         `anim_delay`: float, defaults to .25
             Delay in seconds between each animation frame. Lower values means
@@ -667,9 +667,9 @@ class Image(EventDispatcher):
         '''Load an image
 
         :Parameters:
-            `filename` : str
+            `filename`: str
                 Filename of the image.
-            `keep_data` : bool, defaults to False
+            `keep_data`: bool, defaults to False
                 Keep the image data when the texture is created.
         '''
         kwargs.setdefault('keep_data', False)
@@ -801,7 +801,7 @@ class Image(EventDispatcher):
 
         The filename should have the '.png' extension because the texture data
         read from the GPU is in the RGBA format. '.jpg' might work but has not
-        been heavilly tested so some providers might break when using it.
+        been heavily tested so some providers might break when using it.
         Any other extensions are not officially supported.
 
         The flipped parameter flips the saved image vertically, and
@@ -876,14 +876,14 @@ class Image(EventDispatcher):
                 color = m.read_pixel(150, 150)
 
         :Parameters:
-            `x` : int
+            `x`: int
                 Local x coordinate of the pixel in question.
-            `y` : int
+            `y`: int
                 Local y coordinate of the pixel in question.
         '''
         data = self.image._data[0]
 
-        # can't use this fonction without ImageData
+        # can't use this function without ImageData
         if data.data is None:
             raise EOFError('Image data is missing, make sure that image is'
                            'loaded with keep_data=True keyword.')

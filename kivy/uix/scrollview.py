@@ -21,7 +21,7 @@ interaction is a scrolling gesture, these properties are used:
     - :attr:`~ScrollView.scroll_distance`: the minimum distance to travel,
       defaults to 20 pixels.
     - :attr:`~ScrollView.scroll_timeout`: the maximum time period, defaults
-      to 250 milliseconds.
+      to 55 milliseconds.
 
 If a touch travels :attr:`~ScrollView.scroll_distance` pixels within the
 :attr:`~ScrollView.scroll_timeout` period, it is recognized as a scrolling
@@ -379,7 +379,7 @@ class ScrollView(StencilView):
     '''
 
     effect_cls = ObjectProperty(DampedScrollEffect, allownone=True)
-    '''Class effect to instanciate for X and Y axis.
+    '''Class effect to instantiate for X and Y axis.
 
     .. versionadded:: 1.7.0
 
@@ -758,10 +758,24 @@ class ScrollView(StencilView):
             self._touch = False
             return self.on_scroll_start(touch, False)
         ud = touch.ud[uid]
-        mode = ud['mode']
 
         # check if the minimum distance has been travelled
-        if mode == 'unknown' or mode == 'scroll':
+        if ud['mode'] == 'unknown':
+            if not self.do_scroll_x and not self.do_scroll_y:
+                # touch is in parent, but _change expects window coords
+                touch.push()
+                touch.apply_transform_2d(self.to_local)
+                touch.apply_transform_2d(self.to_window)
+                self._change_touch_mode()
+                touch.pop()
+                return
+            ud['dx'] += abs(touch.dx)
+            ud['dy'] += abs(touch.dy)
+            if ((ud['dx'] > self.scroll_distance and self.do_scroll_x) or
+                    (ud['dy'] > self.scroll_distance and self.do_scroll_y)):
+                ud['mode'] = 'scroll'
+                
+        if ud['mode'] == 'scroll':
             if not touch.ud['sv.handled']['x'] and self.do_scroll_x \
                     and self.effect_x:
                 width = self.width
@@ -794,32 +808,13 @@ class ScrollView(StencilView):
                     touch.ud['sv.handled']['y'] = True
                 # Touch resulted in scroll should not defocus focused widget
                 touch.ud['sv.can_defocus'] = False
-
-        if mode == 'unknown':
-            ud['dx'] += abs(touch.dx)
-            ud['dy'] += abs(touch.dy)
-            if ((ud['dx'] > self.scroll_distance) or
-                    (ud['dy'] > self.scroll_distance)):
-                if not self.do_scroll_x and not self.do_scroll_y:
-                    # touch is in parent, but _change expects window coords
-                    touch.push()
-                    touch.apply_transform_2d(self.to_local)
-                    touch.apply_transform_2d(self.to_window)
-                    self._change_touch_mode()
-                    touch.pop()
-                    return
-                mode = 'scroll'
-            ud['mode'] = mode
-
-        if mode == 'scroll':
             ud['dt'] = touch.time_update - ud['time']
             ud['time'] = touch.time_update
             ud['user_stopped'] = True
-
         return rv
 
     def on_touch_up(self, touch):
-        if self._touch is not touch and self.uid not in touch.ud:
+        if self._touch is not touch and self._get_uid('svavoid') not in touch.ud:
             # touch is in parents
             touch.push()
             touch.apply_transform_2d(self.to_local)
@@ -895,6 +890,13 @@ class ScrollView(StencilView):
         if not self.parent:
             return
 
+        # if _viewport is layout and has pending operation, reschedule
+        if hasattr(self._viewport,'do_layout'):
+            if self._viewport._trigger_layout.is_triggered:
+                Clock.schedule_once(
+                     lambda *dt: self.scroll_to(widget,padding,animate))
+                return
+            
         if isinstance(padding, (int, float)):
             padding = (padding, padding)
 
@@ -1056,7 +1058,7 @@ class ScrollView(StencilView):
         if self.do_scroll_y and self.effect_y:
             self.effect_y.cancel()
         # XXX the next line was in the condition. But this stop
-        # the possibily to "drag" an object out of the scrollview in the
+        # the possibility to "drag" an object out of the scrollview in the
         # non-used direction: if you have an horizontal scrollview, a
         # vertical gesture will not "stop" the scroll view to look for an
         # horizontal gesture, until the timeout is done.

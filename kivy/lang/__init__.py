@@ -210,7 +210,7 @@ these ids may not be available during the inner widget's `__init__` function.
 Valid expressons
 ~~~~~~~~~~~~~~~~
 
-There are two places that accept python statments in a kv file:
+There are two places that accept python statements in a kv file:
 after a property, which assigns to the property the result of the expression
 (such as the text of a button as shown above) and after a on_property, which
 executes the statement when the property is updated (such as on_state).
@@ -392,7 +392,7 @@ The syntax looks like:
     <NewWidget@ButtonBehavior+Label>:
         # kv code here ...
 
-The `@` character is used to seperate your class name from the classes you want
+The `@` character is used to separate your class name from the classes you want
 to subclass. The Python equivalent would have been:
 
 .. code-block:: python
